@@ -10,29 +10,6 @@ import { fileURLToPath } from 'url'
 import { execSync } from 'child_process'
 
 /**
- * Detects if running in Vercel serverless environment
- */
-function isVercelEnvironment(): boolean {
-  // Vercel sets VERCEL=1, also check for AWS Lambda environment variables
-  return process.env.VERCEL === '1' || 
-         process.env.NEXT_RUNTIME === 'nodejs' || 
-         !!process.env.AWS_LAMBDA_RUNTIME_API
-}
-
-/**
- * Returns the appropriate binaries directory based on environment
- * - Normal: ~/.cuimp/binaries
- * - Vercel: /tmp/.cuimp/binaries (ephemeral storage)
- */
-function getBinariesDir(): string {
-  if (isVercelEnvironment()) {
-    return path.resolve('/tmp', '.cuimp', 'binaries')
-  }
-  const homeDir = os.homedir()
-  return path.resolve(homeDir, '.cuimp', 'binaries')
-}
-
-/**
  * Detects if the system uses musl libc (Alpine Linux, etc.) instead of glibc
  * This is important for downloading the correct binary
  */
@@ -109,41 +86,28 @@ function getPackageDir(): string {
   }
 }
 
-// Binary search paths in order of preference (adjusted for Vercel)
-function getBinarySearchPaths(): string[] {
-  const basePaths = [
-    '/usr/local/bin/',
-    '/usr/bin/',
-    '/bin/',
-    '/sbin/',
-    '/usr/sbin/',
-    '/usr/local/sbin/',
-    './binaries/', // Fallback: dedicated folder for downloaded binaries
-    './',
-    '../',
-    '../../',
-    '../../../',
-    '../../../../',
-    '../../../../../',
-    '../../../../../../',
-    '../../../../../../../',
-    '../../../../../../../../',
-    '../../../../../../../../../',
-  ]
-  
-  // For Vercel environment, prioritize /tmp paths and remove system paths if needed
-  if (isVercelEnvironment()) {
-    const binariesDir = getBinariesDir()
-    return [
-      binariesDir,
-      path.resolve(binariesDir, 'bin'),
-      '/tmp/',
-      ...basePaths,
-    ]
-  }
-  
-  return basePaths
-}
+// Binary search paths in order of preference
+const BINARY_SEARCH_PATHS = [
+  '/usr/local/bin/',
+  '/usr/bin/',
+  '/bin/',
+  '/sbin/',
+  '/usr/sbin/',
+  '/usr/local/sbin/',
+  // Package binaries directory (in node_modules) - will be set dynamically
+  // This will be resolved at runtime using require.resolve
+  './binaries/', // Fallback: dedicated folder for downloaded binaries
+  './',
+  '../',
+  '../../',
+  '../../../',
+  '../../../../',
+  '../../../../../',
+  '../../../../../../',
+  '../../../../../../../',
+  '../../../../../../../../',
+  '../../../../../../../../../',
+]
 
 // Binary name patterns to search for
 // Windows binaries can be .exe or .bat files
@@ -206,14 +170,22 @@ const validateParameters = (browser: string, architecture: string, platform: str
  * Searches for existing curl-impersonate binary with a specific version
  */
 const findBinaryWithVersion = (browser: string, version: string): string | null => {
-  // Get the binaries directory (either home or /tmp)
-  const binariesDir = getBinariesDir()
+  // Use tmp directory for binaries (Vercel compatibility)
+  const tmpDir = os.tmpdir()
+  const homeBinariesDir = path.resolve(tmpDir, '.cuimp', 'binaries')
+
+  // Get the package binaries directory dynamically (fallback)
+  const packageDir = getPackageDir()
+  const packageBinariesDir = path.resolve(packageDir, 'cuimp/binaries')
+
+  // On Windows, binaries are extracted to a 'bin' subdirectory
   const isWindows = process.platform === 'win32'
-  
   const searchPaths = [
-    binariesDir,
-    ...(isWindows ? [path.resolve(binariesDir, 'bin')] : []),
-    ...getBinarySearchPaths(),
+    homeBinariesDir,
+    ...(isWindows ? [path.resolve(homeBinariesDir, 'bin')] : []),
+    packageBinariesDir,
+    ...(isWindows ? [path.resolve(packageBinariesDir, 'bin')] : []),
+    ...BINARY_SEARCH_PATHS,
   ]
 
   // Look for browser-specific binary with version (e.g., curl_chrome136)
@@ -274,14 +246,22 @@ const findExistingBinary = (browser: string = ''): string | null => {
     return true
   })
 
-  // Get binaries directory (home or /tmp)
-  const binariesDir = getBinariesDir()
-  const isWindows = process.platform === 'win32'
-  
+  // Use tmp directory for binaries (Vercel compatibility)
+  const tmpDir = os.tmpdir()
+  const homeBinariesDir = path.resolve(tmpDir, '.cuimp', 'binaries')
+
+  // Get the package binaries directory dynamically (fallback)
+  const packageDir = getPackageDir()
+  const packageBinariesDir = path.resolve(packageDir, 'cuimp/binaries')
+
+  // On Windows, binaries are extracted to a 'bin' subdirectory
+  // Create search paths including both directories and Windows-specific bin subdirectory
   const searchPaths = [
-    binariesDir,
-    ...(isWindows ? [path.resolve(binariesDir, 'bin')] : []),
-    ...getBinarySearchPaths(),
+    homeBinariesDir,
+    ...(isWindows ? [path.resolve(homeBinariesDir, 'bin')] : []),
+    packageBinariesDir,
+    ...(isWindows ? [path.resolve(packageBinariesDir, 'bin')] : []),
+    ...BINARY_SEARCH_PATHS,
   ]
 
   for (const searchPath of searchPaths) {
@@ -412,8 +392,9 @@ const downloadAndExtractBinary = async (
     const arrayBuffer = await response.arrayBuffer()
     const buffer = Buffer.from(arrayBuffer)
 
-    // Use appropriate binaries directory (home or /tmp)
-    const binariesDir = getBinariesDir()
+    // Use tmp directory for binaries (Vercel compatibility)
+    const tmpDir = os.tmpdir()
+    const binariesDir = path.resolve(tmpDir, '.cuimp', 'binaries')
 
     // Create binaries directory if it doesn't exist
     if (!fs.existsSync(binariesDir)) {
