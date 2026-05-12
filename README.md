@@ -2,7 +2,7 @@
 
 # Cuimp
 
-**A powerful Node.js wrapper for curl-impersonate**
+**Wrapper Node.js yang powerful untuk curl-impersonate**
 
 [![npm version](https://img.shields.io/npm/v/cuimp.svg?style=flat-square)](https://www.npmjs.com/package/cuimp)
 [![npm downloads](https://img.shields.io/npm/dm/cuimp.svg?style=flat-square)](https://www.npmjs.com/package/cuimp)
@@ -13,70 +13,73 @@
 [![GitHub Stars](https://img.shields.io/github/stars/F4RAN/cuimp-ts?style=flat-square)](https://github.com/F4RAN/cuimp-ts/stargazers)
 [![GitHub Issues](https://img.shields.io/github/issues/F4RAN/cuimp-ts?style=flat-square)](https://github.com/F4RAN/cuimp-ts/issues)
 
-Make HTTP requests that mimic real browser behavior and bypass anti-bot protections with ease.
+Buat HTTP request yang meniru perilaku browser asli dan bypass proteksi anti-bot dengan mudah.
 
-[Features](#features) •
-[Installation](#installation) •
-[Quick Start](#quick-start) •
-[Documentation](#api-reference) •
-[Examples](#examples)
+**🚀 Mendukung Vercel Serverless**: Library ini sudah dimodifikasi untuk berjalan di environment serverless seperti Vercel dengan menyimpan binary di direktori `/tmp/`.
+
+[Fitur](#-fitur) •
+[Instalasi](#-instalasi) •
+[Mulai Cepat](#-mulai-cepat) •
+[Dokumentasi](#api-reference) •
+[Contoh](#contoh-penggunaan-dalam-project)
 
 </div>
 
 ---
 
-## ✨ Features
+## ✨ Fitur
 
-- 🚀 **Browser Impersonation**: Mimic Chrome, Firefox, Safari, and Edge browsers
-- 🔧 **Easy to Use**: Simple API similar to axios/fetch
-- 📦 **Zero Dependencies**: Only requires `tar` for binary extraction
-- 🎯 **TypeScript Support**: Full type definitions included
-- 🔄 **Auto Binary Management**: Automatically downloads and manages curl-impersonate binaries
-- 🌐 **Cross-Platform**: Works on Linux, macOS, and Windows
-- 🔒 **Proxy Support**: Built-in support for HTTP, HTTPS, and SOCKS proxies with authentication
-- 📁 **Clean Installation**: Binaries stored in package directory, not your project root
-- 🍪 **Cookie Management**: Automatic cookie storage and sending across requests
-- ✅ **Error Response Bodies**: Returns full HTTP response body on 4xx/5xx errors (like axios/Postman)
+- 🚀 **Penyamaran Browser**: Meniru Chrome, Firefox, Safari, dan Edge
+- 🔧 **Mudah Digunakan**: API sederhana mirip axios/fetch
+- 📦 **Tanpa Dependency**: Hanya butuh `tar` untuk ekstraksi binary
+- 🎯 **Dukungan TypeScript**: Lengkap dengan definisi tipe
+- 🔄 **Auto Binary Management**: Otomatis download dan kelola binary curl-impersonate
+- 🌐 **Cross-Platform**: Berjalan di Linux, macOS, dan Windows
+- 🔒 **Dukungan Proxy**: Built-in support untuk HTTP, HTTPS, dan SOCKS proxy dengan autentikasi
+- 📁 **Instalasi Bersih**: Binary disimpan di direktori package, bukan di root project Anda
+- 🍪 **Manajemen Cookie**: Otomatis simpan dan kirim cookie antar request
+- ✅ **Body Response Error**: Mengembalikan body HTTP lengkap saat error 4xx/5xx (seperti axios/Postman)
+- ☁️ **Vercel Serverless**: Mendukung environment serverless dengan penyimpanan di `/tmp/`
 
-## 📑 Table of Contents
+## 📑 Daftar Isi
 
-- [Features](#-features)
-- [Installation](#-installation)
-- [Quick Start](#-quick-start)
-- [Project Usage Examples](#project-usage-examples)
+- [Fitur](#-fitur)
+- [Instalasi](#-instalasi)
+- [Mulai Cepat](#-mulai-cepat)
+- [Contoh Penggunaan dalam Project](#contoh-penggunaan-dalam-project)
 - [API Reference](#api-reference)
-- [Configuration](#configuration)
-- [Supported Browsers](#supported-browsers)
-- [Response Format](#response-format)
-- [Binary Management](#binary-management)
+- [Konfigurasi](#konfigurasi)
+- [Browser yang Didukung](#browser-yang-didukung)
+- [Format Response](#format-response)
+- [Manajemen Binary](#manajemen-binary)
 - [Troubleshooting](#troubleshooting)
 - [Requirements](#requirements)
-- [Contributing](#-contributing)
-- [License](#-license)
-- [Contributors](#-contributors)
+- [Kontribusi](#-kontribusi)
+- [Lisensi](#-lisensi)
+- [Kontributor](#-kontributor)
 
-## 📦 Installation
+## 📦 Instalasi
 
 ```bash
-npm install cuimp
+npm install cuimp@github:HamzahSk/cuimp-ts-vercel
 ```
 
-## 🚀 Quick Start
+## 🚀 Mulai Cepat
 
 ```javascript
 import { get, post, createCuimpHttp } from 'cuimp'
 
-// Simple GET request
+// Request GET sederhana
 const response = await get('https://httpbin.org/headers')
 console.log(response.data)
 
-// POST with data
+// POST dengan data
 const result = await post('https://httpbin.org/post', {
   name: 'John Doe',
   email: 'john@example.com',
 })
 
-// Using HTTP client instance
+// Menggunakan instance HTTP client
 const client = createCuimpHttp({
   descriptor: { browser: 'chrome', version: '123' },
 })
@@ -84,19 +87,21 @@ const client = createCuimpHttp({
 const data = await client.get('https://api.example.com/users')
 ```
 
-## Project Usage Examples
+## Contoh Penggunaan dalam Project
 
-### Web Scraping with Browser Impersonation
+### Web Scraping dengan Penyamaran Browser
+
+**Penjelasan**: Contoh ini menunjukkan cara melakukan scraping website yang memblokir request biasa dengan meniru Chrome browser.
 
 ```javascript
 import { get, createCuimpHttp } from 'cuimp'
 
-// Create a client that mimics Chrome 123
+// Buat client yang meniru Chrome 123
 const scraper = createCuimpHttp({
   descriptor: { browser: 'chrome', version: '123' },
 })
 
-// Scrape a website that blocks regular requests
+// Scrape website yang memblokir request biasa
 const response = await scraper.get('https://example.com/protected-content', {
   headers: {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36',
@@ -104,15 +109,17 @@ const response = await scraper.get('https://example.com/protected-content', {
   },
 })
 
-console.log('Scraped content:', response.data)
+console.log('Konten yang di-scrape:', response.data)
 ```
 
-### API Testing with Different Browsers
+### Testing API dengan Browser Berbeda
+
+**Penjelasan**: Loop ini akan menguji API Anda dengan signature dari berbagai browser.
 
 ```javascript
 import { createCuimpHttp } from 'cuimp'
 
-// Test your API with different browser signatures
+// Test API Anda dengan signature browser berbeda
 const browsers = ['chrome', 'firefox', 'safari', 'edge']
 
 for (const browser of browsers) {
@@ -125,36 +132,40 @@ for (const browser of browsers) {
 }
 ```
 
-### Automatic Cookie Management
+### Manajemen Cookie Otomatis
+
+**Penjelasan**: Cookie akan otomatis disimpan dan dikirim ulang di request berikutnya, berguna untuk session management.
 
 ```javascript
 import { createCuimpHttp } from 'cuimp'
 
-// Enable automatic cookie management
+// Aktifkan manajemen cookie otomatis
 const client = createCuimpHttp({
   descriptor: { browser: 'chrome', version: '123' },
-  cookieJar: true, // Cookies are automatically stored and sent
+  cookieJar: true, // Cookie otomatis disimpan dan dikirim
 })
 
-// First request - server sets cookies
+// Request pertama - server set cookies
 await client.get('https://httpbin.org/cookies/set/session_id/abc123')
 
-// Second request - cookies are automatically included
+// Request kedua - cookies otomatis dikirim
 const response = await client.get('https://httpbin.org/cookies')
 console.log(response.data.cookies) // { session_id: 'abc123' }
 
-// Access cookies programmatically
+// Akses cookies secara programmatic
 const cookieJar = client.getCookieJar()
 const cookies = cookieJar.getCookies()
 
-// Clear cookies
+// Hapus semua cookies
 client.clearCookies()
 
-// Clean up when done (removes temp cookie file)
+// Bersihkan resource saat selesai (hapus file cookie temp)
 client.destroy()
 ```
 
-### Using with Proxies
+### Menggunakan Proxy
+
+**Penjelasan**: Contoh penggunaan berbagai jenis proxy untuk request HTTP.
 
 ```javascript
 import { request } from 'cuimp'
@@ -165,21 +176,25 @@ const response1 = await request({
   proxy: 'http://proxy.example.com:8080',
 })
 
-// SOCKS5 proxy with authentication
+// SOCKS5 proxy dengan autentikasi
 const response2 = await request({
   url: 'https://httpbin.org/ip',
   proxy: 'socks5://user:pass@proxy.example.com:1080',
 })
 
-// Automatic proxy detection from environment variables
+// Deteksi proxy otomatis dari environment variables
 // HTTP_PROXY, HTTPS_PROXY, ALL_PROXY
 const response3 = await request({
   url: 'https://httpbin.org/ip',
-  // Will automatically use HTTP_PROXY if set
+  // Akan otomatis gunakan HTTP_PROXY jika tersedia
 })
 ```
 
-### Streaming Responses
+### Streaming Response
+
+**Penjelasan**: Untuk mendapatkan data secara bertahap (misalnya SSE - Server-Sent Events), gunakan `requestStream`.
+
+**Catatan**: Untuk streaming (SSE atau chunked responses), tambahkan `--no-buffer` di `extraCurlArgs` agar curl langsung flush output. Anda juga bisa set di default client.
 
 ```javascript
 import { requestStream } from 'cuimp'
@@ -195,58 +210,62 @@ await requestStream(
       process.stdout.write(chunk)
     },
     onEnd: info => {
-      console.log('done', info.status)
+      console.log('selesai', info.status)
     },
     onError: err => {
-      console.error('stream error', err)
+      console.error('error stream', err)
     },
   }
 )
 ```
 
-Note: For streaming (SSE or chunked responses), include `--no-buffer` in `extraCurlArgs` so curl flushes output immediately. You can also set it on the client defaults:
+**Mengatur di default client:**
 
 ```javascript
 const client = createCuimpHttp({ extraCurlArgs: ['--no-buffer'] })
 await client.requestStream({ url: 'https://httpbin.org/stream/3' }, { onData: chunk => {} })
 ```
 
-If you want the full body, enable buffering:
+**Jika ingin full body, aktifkan buffering:**
 
 ```javascript
 const res = await requestStream({ url: 'https://httpbin.org/stream/3' }, { collectBody: true })
 console.log(res.rawBody?.toString('utf8'))
 ```
 
-### Pre-downloading Binaries
+### Pre-download Binary
+
+**Penjelasan**: Download binary curl-impersonate sebelum digunakan, berguna untuk persiapan offline atau CI/CD.
 
 ```javascript
 import { Cuimp, downloadBinary } from 'cuimp'
 
-// Method 1: Using Cuimp class
+// Metode 1: Menggunakan class Cuimp
 const cuimp = new Cuimp({ descriptor: { browser: 'chrome' } })
 const binaryInfo = await cuimp.download()
 console.log('Downloaded:', binaryInfo.binaryPath)
 
-// Method 2: Using convenience function
+// Metode 2: Menggunakan fungsi convenience
 const info = await downloadBinary({
   descriptor: { browser: 'firefox', version: '133' },
 })
 
-// Pre-download multiple browsers for offline use
+// Pre-download beberapa browser untuk penggunaan offline
 const browsers = ['chrome', 'firefox', 'safari', 'edge']
 for (const browser of browsers) {
   await downloadBinary({ descriptor: { browser } })
-  console.log(`${browser} binary ready`)
+  console.log(`${browser} binary siap`)
 }
 ```
 
 ### Custom Logging
 
+**Penjelasan**: Anda bisa menonaktifkan log atau menggunakan logger custom (seperti Winston, Pino, dll).
+
 ```javascript
 import { createCuimpHttp } from 'cuimp'
 
-// Suppress all logs
+// Nonaktifkan semua log
 const silentLogger = {
   info: () => {},
   warn: () => {},
@@ -259,7 +278,7 @@ const client = createCuimpHttp({
   logger: silentLogger,
 })
 
-// Or use a structured logger (Winston, Pino, etc.)
+// Atau gunakan structured logger (Winston, Pino, dll.)
 const client = createCuimpHttp({
   descriptor: { browser: 'chrome' },
   logger: myStructuredLogger,
@@ -268,11 +287,11 @@ const client = createCuimpHttp({
 
 ## API Reference
 
-### Convenience Functions
+### Fungsi Convenience (Mudah Digunakan)
 
 #### `get(url, config?)`
 
-Make a GET request.
+**Fungsi**: Melakukan HTTP GET request.
 
 ```javascript
 const response = await get('https://api.example.com/users')
@@ -280,7 +299,7 @@ const response = await get('https://api.example.com/users')
 
 #### `post(url, data?, config?)`
 
-Make a POST request.
+**Fungsi**: Melakukan HTTP POST request dengan data.
 
 ```javascript
 const response = await post('https://api.example.com/users', {
@@ -291,33 +310,33 @@ const response = await post('https://api.example.com/users', {
 
 #### `put(url, data?, config?)`
 
-Make a PUT request.
+**Fungsi**: Melakukan HTTP PUT request.
 
 #### `patch(url, data?, config?)`
 
-Make a PATCH request.
+**Fungsi**: Melakukan HTTP PATCH request.
 
 #### `del(url, config?)`
 
-Make a DELETE request.
+**Fungsi**: Melakukan HTTP DELETE request.
 
 #### `head(url, config?)`
 
-Make a HEAD request.
+**Fungsi**: Melakukan HTTP HEAD request (hanya ambil headers, tanpa body).
 
 #### `options(url, config?)`
 
-Make an OPTIONS request.
+**Fungsi**: Melakukan HTTP OPTIONS request.
 
 #### `downloadBinary(options?)`
 
-Download curl-impersonate binary without making HTTP requests.
+**Fungsi**: Download binary curl-impersonate tanpa melakukan HTTP request.
 
 ```javascript
-// Download default binary
+// Download binary default
 const info = await downloadBinary()
 
-// Download specific browser binary
+// Download binary browser spesifik
 const chromeInfo = await downloadBinary({
   descriptor: { browser: 'chrome', version: '123' },
 })
@@ -327,7 +346,7 @@ const chromeInfo = await downloadBinary({
 
 #### `createCuimpHttp(options?)`
 
-Create an HTTP client instance.
+**Fungsi**: Membuat instance HTTP client yang bisa digunakan berulang kali.
 
 ```javascript
 const client = createCuimpHttp({
@@ -335,13 +354,13 @@ const client = createCuimpHttp({
   path: '/custom/path/to/binary',
 })
 
-// Use the client
+// Gunakan client
 const response = await client.get('https://api.example.com/data')
 ```
 
 #### `request(config)`
 
-Make a request with full configuration.
+**Fungsi**: Melakukan request dengan konfigurasi lengkap.
 
 ```javascript
 const response = await request({
@@ -358,7 +377,9 @@ const response = await request({
 
 #### `requestStream(config, handlers?)`
 
-Stream a response body incrementally with callbacks.
+**Fungsi**: Stream response body secara bertahap dengan callback.
+
+**Penjelasan**: Berguna untuk response yang besar atau real-time (SSE, chunked transfer).
 
 ```javascript
 const res = await requestStream(
@@ -366,13 +387,13 @@ const res = await requestStream(
   {
     onHeaders: ({ status }) => console.log('status', status),
     onData: chunk => process.stdout.write(chunk),
-    onEnd: info => console.log('done', info.status),
+    onEnd: info => console.log('selesai', info.status),
     onError: err => console.error(err),
   }
 )
 ```
 
-`handlers` supports:
+**Interface `handlers`:**
 
 ```typescript
 interface CuimpStreamHandlers {
@@ -388,11 +409,11 @@ interface CuimpStreamHandlers {
 }
 ```
 
-### Core Classes
+### Class Inti
 
 #### `Cuimp`
 
-The core class for managing curl-impersonate binaries and descriptors.
+**Penjelasan**: Class inti untuk mengelola binary curl-impersonate dan descriptor.
 
 ```javascript
 import { Cuimp } from 'cuimp'
@@ -402,19 +423,19 @@ const cuimp = new Cuimp({
   path: '/custom/path',
 })
 
-// Verify binary
+// Verifikasi binary
 const info = await cuimp.verifyBinary()
 
-// Build command preview
+// Preview command yang akan dijalankan
 const command = cuimp.buildCommandPreview('https://example.com', 'GET')
 
-// Download binary without verification
+// Download binary tanpa verifikasi
 const binaryInfo = await cuimp.download()
 ```
 
 #### `CuimpHttp`
 
-HTTP client class that wraps the Cuimp core.
+**Penjelasan**: Class HTTP client yang membungkus Cuimp core.
 
 ```javascript
 import { CuimpHttp, Cuimp } from 'cuimp'
@@ -426,27 +447,27 @@ const client = new CuimpHttp(core, {
 })
 ```
 
-`CuimpHttp` also supports streaming via `client.requestStream(config, handlers)`.
+`CuimpHttp` juga mendukung streaming via `client.requestStream(config, handlers)`.
 
-## Configuration
+## Konfigurasi
 
 ### CuimpDescriptor
 
-Configure which browser to impersonate:
+**Penjelasan**: Konfigurasi browser mana yang akan ditiru.
 
 ```typescript
 interface CuimpDescriptor {
   browser?: 'chrome' | 'firefox' | 'edge' | 'safari'
-  version?: string // e.g., '123', '124', or 'latest' (default)
+  version?: string // contoh: '123', '124', atau 'latest' (default)
   architecture?: 'x64' | 'arm64'
   platform?: 'linux' | 'windows' | 'macos'
-  forceDownload?: boolean // Force re-download even if binary exists
+  forceDownload?: boolean // Paksa download ulang meskipun binary sudah ada
 }
 ```
 
 ### CuimpRequestConfig
 
-Request configuration options:
+**Penjelasan**: Opsi konfigurasi untuk request HTTP.
 
 ```typescript
 interface CuimpRequestConfig {
@@ -456,93 +477,93 @@ interface CuimpRequestConfig {
   data?: any
   timeout?: number
   maxRedirects?: number
-  proxy?: string // HTTP, HTTPS, or SOCKS proxy URL
-  insecureTLS?: boolean // Skip TLS certificate verification
-  signal?: AbortSignal // Request cancellation
+  proxy?: string // URL proxy HTTP, HTTPS, atau SOCKS
+  insecureTLS?: boolean // Skip verifikasi sertifikat TLS
+  signal?: AbortSignal // Pembatalan request
 }
 ```
 
 ### CuimpOptions
 
-Core options:
+**Penjelasan**: Opsi inti untuk konfigurasi Cuimp.
 
 ```typescript
 interface CuimpOptions {
   descriptor?: CuimpDescriptor
-  path?: string // Custom path to curl-impersonate binary
-  extraCurlArgs?: string[] // Global curl arguments applied to all requests
-  logger?: Logger // Custom logger for binary download/verification messages
-  proxy?: string // Default proxy for all requests (HTTP, HTTPS, or SOCKS URL)
-  cookieJar?: boolean | string // Enable automatic cookie management
-  autoDownload?: boolean // If false, throw error instead of auto-downloading binaries (default: true)
+  path?: string // Path custom ke binary curl-impersonate
+  extraCurlArgs?: string[] // Argumen curl global untuk semua request
+  logger?: Logger // Custom logger untuk pesan download/verifikasi binary
+  proxy?: string // Proxy default untuk semua request (HTTP, HTTPS, atau SOCKS URL)
+  cookieJar?: boolean | string // Aktifkan manajemen cookie otomatis
+  autoDownload?: boolean // Jika false, throw error alih-alih auto-download binary (default: true)
 }
 ```
 
-### Proxy Configuration
+### Konfigurasi Proxy
 
-Set a default proxy for all requests when creating the client. Per-request `proxy` in `CuimpRequestConfig` overrides this.
+**Penjelasan**: Set proxy default untuk semua request saat membuat client. `proxy` per-request akan override yang ini.
 
 ```typescript
-// Session-level proxy: all requests use this proxy by default
+// Proxy level session: semua request gunakan proxy ini secara default
 const client = createCuimpHttp({
   proxy: 'http://proxy.example.com:8080',
 })
 
-await client.get('https://api.example.com/data') // Uses the proxy
+await client.get('https://api.example.com/data') // Gunakan proxy
 
-// Override for a single request
+// Override untuk satu request
 await client.get('https://api.example.com/other', {
   proxy: 'socks5://other-proxy:1080',
 })
 ```
 
-Supported proxy URL formats: `http://host:port`, `https://host:port`, `socks4://host:port`, `socks5://host:port`, or `host:port` (defaults to HTTP). Authentication: `http://user:pass@host:port`.
+**Format proxy yang didukung**: `http://host:port`, `https://host:port`, `socks4://host:port`, `socks5://host:port`, atau `host:port` (default HTTP). Autentikasi: `http://user:pass@host:port`.
 
-### Cookie Jar Configuration
+### Konfigurasi Cookie Jar
 
-The `cookieJar` option enables automatic cookie management:
+**Penjelasan**: Opsi `cookieJar` mengaktifkan manajemen cookie otomatis.
 
 ```typescript
-// Option 1: Automatic temp file (cleaned up on destroy)
+// Opsi 1: File temp otomatis (dibersihkan saat destroy)
 const client = createCuimpHttp({
   cookieJar: true,
 })
 
-// Option 2: Custom file path (persists between runs)
-// Recommended: Use user home directory for security
+// Opsi 2: Path file custom (persisten antar run)
+// Rekomendasi: Gunakan direktori home user untuk keamanan
 import os from 'os'
 import path from 'path'
 
 const cookiePath = path.join(os.homedir(), '.cuimp', 'cookies', 'my-cookies.txt')
 const client = createCuimpHttp({
-  cookieJar: cookiePath, // User-specific, secure location
+  cookieJar: cookiePath, // Lokasi user-specific, aman
 })
 
-// Option 3: Disabled (default)
+// Opsi 3: Nonaktif (default)
 const client = createCuimpHttp({
-  cookieJar: false, // or omit entirely
+  cookieJar: false, // atau tidak usah ditulis
 })
 ```
 
-**Best Practices for Cookie File Paths:**
+**Best Practice untuk Path File Cookie:**
 
-- ✅ Use `~/.cuimp/cookies/` (user home directory) - secure, user-specific, consistent with binary storage
-- ✅ Use temp directory for temporary cookies - auto-cleaned
-- ❌ Avoid project root (`./cookies.txt`) - risk of committing sensitive data to git
+- ✅ Gunakan `~/.cuimp/cookies/` (direktori home user) - aman, user-specific, konsisten dengan penyimpanan binary
+- ✅ Gunakan direktori temp untuk cookie sementara - auto-dibersihkan
+- ❌ Hindari root project (`./cookies.txt`) - risiko commit data sensitif ke git
 
-**Cookie Jar Methods:**
+**Method Cookie Jar:**
 
 ```typescript
-// Get the cookie jar instance
+// Dapatkan instance cookie jar
 const jar = client.getCookieJar()
 
-// Get all cookies
+// Dapatkan semua cookies
 const cookies = jar.getCookies()
 
-// Get cookies for a specific domain
+// Dapatkan cookies untuk domain spesifik
 const domainCookies = jar.getCookiesForDomain('example.com')
 
-// Manually set a cookie
+// Set cookie secara manual
 jar.setCookie({
   domain: 'example.com',
   name: 'my_cookie',
@@ -552,25 +573,25 @@ jar.setCookie({
   expires: new Date('2025-12-31'),
 })
 
-// Delete a cookie
+// Hapus cookie
 jar.deleteCookie('my_cookie', 'example.com')
 
-// Clear all cookies
+// Hapus semua cookies
 client.clearCookies()
 
-// Clean up (removes temp file if using cookieJar: true)
+// Bersihkan resource (hapus file temp jika pakai cookieJar: true)
 client.destroy()
 ```
 
-### Binary Auto-Download Control
+### Kontrol Auto-Download Binary
 
-By default, cuimp automatically downloads binaries if they're not found. You can disable this behavior:
+**Penjelasan**: Secara default, cuimp otomatis download binary jika tidak ditemukan. Anda bisa menonaktifkan perilaku ini.
 
 ```typescript
-// Disable auto-download (for advanced users)
+// Nonaktifkan auto-download (untuk pengguna advanced)
 const client = createCuimpHttp({
   descriptor: { browser: 'chrome' },
-  autoDownload: false, // Will throw error if binary not found
+  autoDownload: false, // Akan throw error jika binary tidak ditemukan
 })
 
 try {
@@ -580,20 +601,20 @@ try {
   // Set autoDownload: true to enable automatic download
 }
 
-// Explicit download still works
+// Download eksplisit tetap berfungsi
 const cuimp = new Cuimp({ descriptor: { browser: 'chrome' }, autoDownload: false })
-await cuimp.download() // Always downloads, ignoring autoDownload setting
+await cuimp.download() // Selalu download, abaikan setting autoDownload
 ```
 
-**Use cases for `autoDownload: false`:**
+**Use case untuk `autoDownload: false`:**
 
-- Control when binaries are downloaded (custom installation methods)
-- Fail fast if binary is missing (production environments)
-- Prevent unexpected downloads
+- Kontrol kapan binary di-download (metode instalasi custom)
+- Fail fast jika binary hilang (environment production)
+- Cegah download yang tidak diinginkan
 
 ### Custom Logging
 
-You can provide a custom logger to control how cuimp logs binary download and verification messages:
+**Penjelasan**: Anda bisa menyediakan custom logger untuk mengontrol cara cuimp mencatat pesan download dan verifikasi binary.
 
 ```typescript
 interface Logger {
@@ -604,12 +625,12 @@ interface Logger {
 }
 ```
 
-**Example: Using a custom formatted logger**
+**Contoh: Logger dengan format custom**
 
 ```javascript
 import { createCuimpHttp } from 'cuimp'
 
-// Custom logger with formatted output
+// Custom logger dengan output terformat
 const customLogger = {
   info: (...args) => console.log('[INFO]', new Date().toISOString(), ...args),
   warn: (...args) => console.warn('[WARN]', new Date().toISOString(), ...args),
@@ -622,13 +643,13 @@ const client = createCuimpHttp({
   logger: customLogger,
 })
 
-// Now all binary download/verification messages will use your custom format
+// Sekarang semua pesan download/verifikasi binary akan gunakan format custom Anda
 await client.get('https://api.example.com/data')
 // Output: [INFO] 2024-01-15T10:30:00.000Z Verifying binary...
 // Output: [INFO] 2024-01-15T10:30:01.000Z Binary verified successfully
 ```
 
-**Example: Collecting logs for analysis**
+**Contoh: Mengumpulkan log untuk analisis**
 
 ```javascript
 const logEntries = []
@@ -651,20 +672,20 @@ const client = createCuimpHttp({
 
 await client.get('https://api.example.com/data')
 
-// Analyze collected logs
-console.log('Collected logs:', logEntries)
-// Can send to external logging service, save to file, etc.
+// Analisis log yang dikumpulkan
+console.log('Log terkumpul:', logEntries)
+// Bisa kirim ke layanan logging eksternal, simpan ke file, dll.
 ```
 
-**Example: Conditional debug logger (environment-based)**
+**Contoh: Debug logger kondisional (berbasis environment)**
 
 ```javascript
-// Only show debug messages when DEBUG=true is set
+// Hanya tampilkan debug messages saat DEBUG=true di-set
 const smartLogger = {
   info: (...args) => console.log('[INFO]', ...args),
   warn: (...args) => console.warn('[WARN]', ...args),
   error: (...args) => console.error('[ERROR]', ...args),
-  debug: process.env.DEBUG === 'true' ? (...args) => console.debug('[DEBUG]', ...args) : () => {}, // Suppress debug messages by default
+  debug: process.env.DEBUG === 'true' ? (...args) => console.debug('[DEBUG]', ...args) : () => {}, // Suppress debug secara default
 }
 
 const client = createCuimpHttp({
@@ -673,15 +694,15 @@ const client = createCuimpHttp({
 })
 
 await client.get('https://api.example.com/data')
-// With DEBUG=true: Shows all logs including debug messages
-// Without DEBUG: Only shows info/warn/error, suppresses debug
+// Dengan DEBUG=true: Tampilkan semua log termasuk debug
+// Tanpa DEBUG: Hanya tampilkan info/warn/error, suppress debug
 ```
 
-By default, cuimp uses `console` for logging. Diagnostic messages (like "Found existing binary", "Binary verified") are logged at `debug` level, so they only appear if your logger implements `debug()`.
+Secara default, cuimp menggunakan `console` untuk logging. Pesan diagnostik (seperti "Found existing binary", "Binary verified") dicatat di level `debug`, jadi hanya muncul jika logger Anda mengimplementasikan `debug()`.
 
-## Supported Browsers
+## Browser yang Didukung
 
-| Browser | Versions                                                                  | Platforms                      |
+| Browser | Versi                                                                     | Platform                       |
 | ------- | ------------------------------------------------------------------------- | ------------------------------ |
 | Chrome  | 99, 100, 101, 104, 107, 110, 116, 119, 120, 123, 124, 131, 133a, 136, 142 | Linux, Windows, macOS, Android |
 | Firefox | 133, 135, 145                                                             | Linux, Windows, macOS          |
@@ -689,9 +710,9 @@ By default, cuimp uses `console` for logging. Diagnostic messages (like "Found e
 | Safari  | 153, 155, 170, 172, 180, 184, 260, 2601                                   | macOS, iOS                     |
 | Tor     | 145                                                                       | Linux, Windows, macOS          |
 
-## Response Format
+## Format Response
 
-All HTTP methods return a standardized response. **Important**: Unlike traditional curl behavior, cuimp returns response objects for all HTTP status codes (including 4xx/5xx), allowing you to access error response bodies, headers, and status information. Only network errors (connection failures, DNS errors, etc.) throw exceptions.
+**Penjelasan**: Semua method HTTP mengembalikan response yang terstandarisasi. **Penting**: Berbeda dengan perilaku curl tradisional, cuimp mengembalikan objek response untuk semua kode status HTTP (termasuk 4xx/5xx), memungkinkan Anda mengakses body, headers, dan informasi status error. Hanya network error (kegagalan koneksi, DNS error, dll.) yang throw exception.
 
 ```typescript
 interface CuimpResponse<T = any> {
@@ -709,27 +730,27 @@ interface CuimpResponse<T = any> {
 }
 ```
 
-## Examples
+## Contoh
 
-> **📁 Runnable Examples**: Check out the [`examples/`](./examples/) folder for complete, runnable examples demonstrating all features of cuimp.
+> **📁 Contoh yang Bisa Dijalankan**: Lihat folder [`examples/`](./examples/) untuk contoh lengkap yang bisa langsung dijalankan, mendemonstrasikan semua fitur cuimp.
 
-### Basic Usage
+### Penggunaan Dasar
 
 ```javascript
 import { get, post } from 'cuimp'
 
-// GET request
+// Request GET
 const users = await get('https://jsonplaceholder.typicode.com/users')
 console.log(users.data)
 
-// POST request
+// Request POST
 const newUser = await post('https://jsonplaceholder.typicode.com/users', {
   name: 'John Doe',
   email: 'john@example.com',
 })
 ```
 
-### Using HTTP Client
+### Menggunakan HTTP Client
 
 ```javascript
 import { createCuimpHttp } from 'cuimp'
@@ -741,7 +762,7 @@ const client = createCuimpHttp({
 // Set default headers
 client.defaults.headers['Authorization'] = 'Bearer your-token'
 
-// Make requests
+// Buat request
 const response = await client.get('/api/users')
 ```
 
@@ -757,30 +778,32 @@ const cuimp = new Cuimp({
 const info = await cuimp.verifyBinary()
 ```
 
-### Handling 4xx/5xx Error Responses
+### Menangani Response Error 4xx/5xx
+
+**Penjelasan**: Berbeda dengan curl biasa, cuimp mengembalikan objek response lengkap untuk error HTTP, bukan throw exception.
 
 ```javascript
 import { get, post } from 'cuimp'
 
-// 4xx/5xx responses return response objects (not thrown)
+// Response 4xx/5xx mengembalikan objek response (tidak di-throw)
 const response = await get('https://httpbin.org/status/404')
 
 if (response.status === 404) {
-  console.log('Resource not found:', response.data)
+  console.log('Resource tidak ditemukan:', response.data)
 } else if (response.status >= 500) {
   console.error('Server error:', response.statusText)
-  console.error('Error details:', response.data)
+  console.error('Detail error:', response.data)
 } else if (response.status >= 400) {
   console.warn('Client error:', response.status, response.statusText)
 }
 
-// Handle JSON error responses
+// Menangani JSON error response
 const errorResponse = await post('https://api.example.com/users', {
   email: 'invalid-email',
 })
 
 if (errorResponse.status === 400) {
-  // Access the error body (parsed JSON if Content-Type is application/json)
+  // Akses body error (parsed JSON jika Content-Type adalah application/json)
   const errorData = errorResponse.data
   console.log('Validation errors:', errorData.errors)
   console.log('Error message:', errorData.message)
@@ -789,27 +812,27 @@ if (errorResponse.status === 400) {
 
 ### Error Handling
 
-**4xx/5xx Responses**: Unlike traditional curl behavior, cuimp returns full response objects for HTTP error status codes (4xx/5xx), similar to axios and Postman. This allows you to access error response bodies, headers, and status information.
+**Response 4xx/5xx**: Berbeda dengan perilaku curl tradisional, cuimp mengembalikan objek response lengkap untuk kode status error HTTP (4xx/5xx), mirip dengan axios dan Postman. Ini memungkinkan Anda mengakses body, headers, dan informasi status error.
 
 ```javascript
 import { get } from 'cuimp'
 
-// 4xx/5xx responses return response objects (not thrown)
+// Response 4xx/5xx mengembalikan objek response (tidak di-throw)
 const response = await get('https://httpbin.org/status/404')
 console.log('Status:', response.status) // 404
 console.log('Status Text:', response.statusText) // 'Not Found'
-console.log('Body:', response.data) // Response body (if any)
+console.log('Body:', response.data) // Response body (jika ada)
 console.log('Headers:', response.headers) // Response headers
 
-// Check status and handle accordingly
+// Cek status dan handle sesuai kebutuhan
 if (response.status >= 400) {
   console.error(`Error ${response.status}:`, response.data)
 } else {
-  console.log('Success:', response.data)
+  console.log('Sukses:', response.data)
 }
 ```
 
-**Network Errors**: Network errors (connection failures, DNS errors, etc.) are still thrown as exceptions:
+**Network Error**: Network error (kegagalan koneksi, DNS error, dll.) tetap di-throw sebagai exception:
 
 ```javascript
 import { get } from 'cuimp'
@@ -819,40 +842,40 @@ try {
   console.log(response.data)
 } catch (error) {
   if (error.code === 'ENOTFOUND') {
-    console.log('Network error: DNS resolution failed')
+    console.log('Network error: Resolusi DNS gagal')
   } else if (error.code === 'ECONNREFUSED') {
-    console.log('Network error: Connection refused')
+    console.log('Network error: Koneksi ditolak')
   } else {
-    console.log('Unknown error:', error.message)
+    console.log('Error tidak diketahui:', error.message)
   }
 }
 ```
 
-## Binary Management
+## Manajemen Binary
 
-Cuimp automatically manages curl-impersonate binaries:
+**Penjelasan**: Cuimp otomatis mengelola binary curl-impersonate dengan cara:
 
-1. **Automatic Download**: Downloads the appropriate binary for your platform on first use
-2. **Version Matching**: Reuses cached binaries only if they match the requested version
-3. **Force Download**: Use `forceDownload: true` to bypass cache and always download fresh binaries
-4. **Verification**: Checks binary integrity and permissions
-5. **Clean Storage**: Binaries are stored in `~/.cuimp/binaries/` (user home directory)
-6. **Cross-Platform**: Automatically detects your platform and architecture
+1. **Download Otomatis**: Download binary yang sesuai untuk platform Anda saat pertama kali digunakan
+2. **Pencocokan Versi**: Gunakan ulang binary yang di-cache hanya jika versinya cocok dengan yang diminta
+3. **Force Download**: Gunakan `forceDownload: true` untuk bypass cache dan selalu download binary fresh
+4. **Verifikasi**: Cek integritas dan permission binary
+5. **Penyimpanan Bersih**: Binary disimpan di `~/.cuimp/binaries/` (direktori home user) atau `/tmp/cuimp/binaries/` (untuk Vercel serverless)
+6. **Cross-Platform**: Otomatis deteksi platform dan arsitektur Anda
 
-### Version Behavior
+### Perilaku Versi
 
-- **Specific version** (e.g., `'133'`): Uses cached binary if version matches, otherwise downloads
-- **'latest'** (default): Uses any cached binary, or downloads if none exists
-- **forceDownload**: Always downloads, ignoring cache (useful for always getting the actual latest version)
+- **Versi spesifik** (contoh: `'133'`): Gunakan binary yang di-cache jika versinya cocok, jika tidak download
+- **'latest'** (default): Gunakan binary yang di-cache apapun, atau download jika tidak ada
+- **forceDownload**: Selalu download, abaikan cache (berguna untuk selalu mendapat versi terbaru)
 
-### Binary Storage Location
+### Lokasi Penyimpanan Binary
 
-- **Download location**: `~/.cuimp/binaries/` (user home directory)
-- **Search locations**: Also checks `node_modules/cuimp/binaries/` and system paths as fallback
-- **Shared across projects**: Downloaded binaries are reused between projects
-- **No Project Pollution**: Your project directory stays clean
+- **Lokasi download**: `~/.cuimp/binaries/` (direktori home user) atau `/tmp/cuimp/binaries/` (Vercel serverless)
+- **Lokasi pencarian**: Juga cek `node_modules/cuimp/binaries/` dan system paths sebagai fallback
+- **Shared antar project**: Binary yang di-download digunakan ulang antar project
+- **Tanpa Polusi Project**: Direktori project Anda tetap bersih
 
-### Supported Proxy Formats
+### Format Proxy yang Didukung
 
 ```javascript
 // HTTP proxy
@@ -867,36 +890,36 @@ proxy: 'socks4://proxy.example.com:1080'
 // SOCKS5 proxy
 proxy: 'socks5://proxy.example.com:1080'
 
-// Proxy with authentication
+// Proxy dengan autentikasi
 proxy: 'http://username:password@proxy.example.com:8080'
 proxy: 'socks5://username:password@proxy.example.com:1080'
 
-// Automatic from environment variables
+// Otomatis dari environment variables
 // HTTP_PROXY, HTTPS_PROXY, ALL_PROXY, http_proxy, https_proxy, all_proxy
 ```
 
-## Important Notes
+## Catatan Penting
 
-### Force Download Behavior
+### Perilaku Force Download
 
-Cuimp **always downloads fresh binaries** on first use, regardless of what's already installed on your system. This ensures:
+**Penjelasan**: Cuimp **selalu download binary fresh** saat pertama kali digunakan, terlepas dari apa yang sudah terinstal di sistem Anda. Ini memastikan:
 
-- ✅ **Consistency**: All users get the same binary versions
-- ✅ **Reliability**: No dependency on system-installed binaries
-- ✅ **Security**: Fresh downloads with verified checksums
-- ✅ **Simplicity**: No need to manage system dependencies
+- ✅ **Konsistensi**: Semua pengguna mendapat versi binary yang sama
+- ✅ **Keandalan**: Tidak bergantung pada binary yang terinstal di sistem
+- ✅ **Keamanan**: Download fresh dengan checksum yang terverifikasi
+- ✅ **Kesederhanaan**: Tidak perlu kelola dependency sistem
 
 ### Environment Variables
 
-Cuimp automatically detects and uses these proxy environment variables:
+**Penjelasan**: Cuimp otomatis deteksi dan gunakan environment variables proxy ini:
 
 ```bash
-# Set proxy for all requests
+# Set proxy untuk semua request
 export HTTP_PROXY=http://proxy.example.com:8080
 export HTTPS_PROXY=https://proxy.example.com:8080
 export ALL_PROXY=socks5://proxy.example.com:1080
 
-# Or use lowercase variants
+# Atau gunakan varian lowercase
 export http_proxy=http://proxy.example.com:8080
 export https_proxy=https://proxy.example.com:8080
 export all_proxy=socks5://proxy.example.com:1080
@@ -905,56 +928,56 @@ export all_proxy=socks5://proxy.example.com:1080
 ## Requirements
 
 - Node.js >= 18.17
-- Internet connection (for binary download)
+- Koneksi internet (untuk download binary)
 
 ## Troubleshooting
 
-### Common Issues
+### Masalah Umum
 
-**Q: Binary download fails**
+**Q: Download binary gagal**
 
 ```bash
-# Check your internet connection and try again
-# The binary will be downloaded to node_modules/cuimp/binaries/
+# Cek koneksi internet Anda dan coba lagi
+# Binary akan di-download ke node_modules/cuimp/binaries/
 ```
 
-**Q: Proxy not working**
+**Q: Proxy tidak bekerja**
 
 ```javascript
-// Make sure your proxy URL is correct
+// Pastikan URL proxy Anda benar
 const response = await request({
   url: 'https://httpbin.org/ip',
   proxy: 'http://username:password@proxy.example.com:8080',
 })
 
-// Or set environment variables
+// Atau set environment variables
 process.env.HTTP_PROXY = 'http://proxy.example.com:8080'
 ```
 
-**Q: Permission denied errors**
+**Q: Error permission denied**
 
 ```bash
-# On Unix systems, make sure the binary has execute permissions
+# Di sistem Unix, pastikan binary punya permission execute
 chmod +x node_modules/cuimp/binaries/curl-impersonate
 ```
 
-**Q: Binary not found**
+**Q: Binary tidak ditemukan**
 
 ```javascript
-// Force re-download by clearing the binaries directory
+// Paksa re-download dengan menghapus direktori binaries
 rm -rf node_modules/cuimp/binaries/
-// Then run your code again - it will re-download
+// Lalu jalankan kode Anda lagi - akan re-download
 ```
 
-### Debug Mode
+### Mode Debug
 
-Enable debug logging to see what's happening:
+**Penjelasan**: Aktifkan debug logging untuk melihat apa yang terjadi:
 
 ```javascript
 // Set debug environment variable
 process.env.DEBUG = 'cuimp:*'
 
-// Or check the binary path
+// Atau cek binary path
 import { Cuimp } from 'cuimp'
 const cuimp = new Cuimp()
 const binaryPath = await cuimp.verifyBinary()
@@ -963,37 +986,37 @@ console.log('Binary path:', binaryPath)
 
 ### Docker
 
-#### Error: “error setting certificate verify locations”
+#### Error: "error setting certificate verify locations"
 
-When running cuimp inside a Docker container, you may encounter the following error:
+**Penjelasan**: Saat menjalankan cuimp di dalam container Docker, Anda mungkin menemui error berikut:
 
 `error setting certificate verify locations: CAfile: /etc/ssl/certs/ca-certificates.crt CApath: /etc/ssl/certs`
 
-This occurs because the container does not have access to the required CA certificates.  
-To fix this, mount your host machine’s certificate directory into the container, for example:
+Ini terjadi karena container tidak punya akses ke CA certificates yang diperlukan.  
+Untuk memperbaikinya, mount direktori certificate dari host machine ke dalam container, contoh:
 
 ```yaml
 volumes:
   - /etc/ssl/certs:/etc/ssl/certs:ro
 ```
 
-This ensures cuimp can properly verify TLS certificates inside the container.
+Ini memastikan cuimp bisa memverifikasi sertifikat TLS dengan benar di dalam container.
 
-## 📄 License
+## 📄 Lisensi
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+Project ini dilisensikan di bawah MIT License - lihat file [LICENSE](LICENSE) untuk detail.
 
-## 🤝 Contributing
+## 🤝 Kontribusi
 
-Contributions, issues, and feature requests are welcome!
+Kontribusi, issues, dan feature request sangat welcome!
 
-Feel free to check the [issues page](https://github.com/F4RAN/cuimp-ts/issues) if you want to contribute.
+Jangan ragu untuk cek [halaman issues](https://github.com/F4RAN/cuimp-ts/issues) jika Anda ingin berkontribusi.
 
-1. Fork the project
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. Fork project
+2. Buat feature branch Anda (`git checkout -b feature/AmazingFeature`)
+3. Commit perubahan Anda (`git commit -m 'Add some AmazingFeature'`)
+4. Push ke branch (`git push origin feature/AmazingFeature`)
+5. Buka Pull Request
 
 ## 🔗 Links
 
@@ -1002,9 +1025,9 @@ Feel free to check the [issues page](https://github.com/F4RAN/cuimp-ts/issues) i
 - **curl-impersonate**: [github.com/lexiforest/curl-impersonate](https://github.com/lexiforest/curl-impersonate)
 - **Issues & Bug Reports**: [github.com/F4RAN/cuimp-ts/issues](https://github.com/F4RAN/cuimp-ts/issues)
 
-## 👥 Contributors
+## 👥 Kontributor
 
-Thanks to these awesome people who have contributed to this project:
+Terima kasih kepada orang-orang luar biasa yang telah berkontribusi pada project ini:
 
 <table>
   <tr>
@@ -1087,8 +1110,8 @@ Thanks to these awesome people who have contributed to this project:
 
 <div align="center">
 
-**If you find this project useful, please consider giving it a ⭐️!**
+**Jika Anda merasa project ini berguna, tolong beri ⭐️!**
 
-Made with ❤️ by the Cuimp community
+Dibuat dengan ❤️ oleh komunitas Cuimp
 
 </div>
