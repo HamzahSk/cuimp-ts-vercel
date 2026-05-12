@@ -13,6 +13,8 @@
 [![GitHub Stars](https://img.shields.io/github/stars/F4RAN/cuimp-ts?style=flat-square)](https://github.com/F4RAN/cuimp-ts/stargazers)
 [![GitHub Issues](https://img.shields.io/github/issues/F4RAN/cuimp-ts?style=flat-square)](https://github.com/F4RAN/cuimp-ts/issues)
 
+[Hosted on TierHive Hourly VPS](https://tierhive.com/r/F726648AD09A)
+
 Buat HTTP request yang meniru perilaku browser asli dan bypass proteksi anti-bot dengan mudah.
 
 **🚀 Mendukung Vercel Serverless**: Library ini sudah dimodifikasi untuk berjalan di environment serverless seperti Vercel dengan menyimpan binary di direktori `/tmp/`.
